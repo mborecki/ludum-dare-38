@@ -28,8 +28,23 @@ export default class Base extends Phaser.Sprite {
     }
 
     targetPosition(x, y) {
-        console.log('targetPosition', x, y, Math.acos(x));
+        let rot = Phaser.Math.normalizeAngle(Phaser.Math.angleBetween(x,y,0,1) - this.rotation);
 
-        this.cannon.rotation = Phaser.Math.angleBetween(x,y,0,1) - this.rotation;
+        if (rot < 0 || rot > Math.PI  * 1.5) {
+            rot = 0;
+        }
+
+        if (rot > Math.PI && rot <= Math.PI * 1.5) {
+            rot = Math.PI;
+        }
+        this.cannon.rotation = rot;
+    }
+
+    getCannonRot() : number {
+        return this.cannon.rotation + this.rotation;
+    }
+
+    getBulletOrigin() : [number, number] {
+        return [this.x, this.y];
     }
 }
