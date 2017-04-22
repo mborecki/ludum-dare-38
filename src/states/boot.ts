@@ -8,6 +8,9 @@ export class BootState extends Phaser.State {
   }
 
   preload () {
+    this.load.spritesheet('planet', './assets/images/planet.png', 500, 500);
+    this.load.spritesheet('base', './assets/images/base.png', 50, 25);
+    this.load.spritesheet('cannon', './assets/images/cannon.png', 50, 10);
   }
 
   render () {
