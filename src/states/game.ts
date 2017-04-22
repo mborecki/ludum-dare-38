@@ -11,6 +11,7 @@ export class GameState extends Phaser.State {
   planet: Planet;
   base: Base;
   bg: Phaser.Sprite;
+  points: number = 0;
 
   playerBuildings: Phaser.Group;
 
@@ -57,6 +58,7 @@ export class GameState extends Phaser.State {
   }
 
   update () {
+    this.game.debug.text(`Points: ${this.points}`, 32, 32);
   }
 
   createBG() {
@@ -123,6 +125,10 @@ export class GameState extends Phaser.State {
         state: this,
         pntRot: (Phaser.Math.PI2 * i / c) + (this.base.pntRot % Phaser.Math.PI2)
       }));
+
+      enemy.killed.add(() => {
+        this.points += enemy.pointValue;
+      })
     }
   }
 

@@ -5,7 +5,9 @@ import {WorldToPnt, PntToWorld, rotDist} from '../../utils';
 export default class GreenMan extends Phaser.Sprite {
     private _pntRot: number;
     private moveVector: number = 1;
-    state: Phaser.Stage;
+    killed: Phaser.Signal = new Phaser.Signal();
+    pointValue: number = CFG.ENEMIES.GREEN_MAN.VALUE;
+    state: any;
 
     constructor({state, pntRot}) {
         super(state.game, 0, 0, 'green-man');
@@ -76,6 +78,7 @@ export default class GreenMan extends Phaser.Sprite {
 
     collision() {
         console.log('AU!');
+        this.killed.dispatch();
         this.destroy();
     }
 

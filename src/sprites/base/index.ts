@@ -27,7 +27,7 @@ export default class Base extends Phaser.Sprite {
         while (v < 0) {
             v = v + Phaser.Math.PI2;
         }
-        
+
         this._pntRot = (v % Phaser.Math.PI2);
     }
 
