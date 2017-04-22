@@ -6,11 +6,16 @@ export default class CannonBall extends Phaser.Sprite {
         super(game, x, y, 'cannon-ball');
         this.anchor.set(0.5, 0.5);
         this.game.physics.enable(this);
+        this.body.setCircle(CFG.WEAPONS.CANNON_BALL.SIZE);
 
         this.body.velocity = {
             x: -CFG.WEAPONS.CANNON_BALL.SPEED * Math.cos(angle),
             y: -CFG.WEAPONS.CANNON_BALL.SPEED * Math.sin(angle)
         }
+
+        this.events.onOutOfBounds.add(this.destroy, this);
+        this.body.onOverlap = new Phaser.Signal();
+        this.body.onOverlap.add(this.collision, this);
     }
 
     update() {
@@ -32,6 +37,10 @@ export default class CannonBall extends Phaser.Sprite {
         if (distToPlanet > CFG.MAX_DISTANCE) {
             this.destroy();
         }
+    }
 
+    collision() {
+        console.log('COLLIDE!')
+        this.destroy();
     }
 }   

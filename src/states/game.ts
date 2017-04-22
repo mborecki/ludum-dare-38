@@ -39,7 +39,7 @@ export class GameState extends Phaser.State {
   }
 
   update () {
-
+    this.physics.arcade.overlap(this.planet, this.weapons);
   }
 
   createBG() {
@@ -68,7 +68,7 @@ export class GameState extends Phaser.State {
       y: 0
     });
 
-    this.spawnObject(this.base, Math.PI / 3, CFG.PLANET.SIZE)
+    this.spawnObject(this.base, 0 * Math.PI / 3, CFG.PLANET.SIZE)
   }
 
   spawnObject(object: Phaser.Sprite, rot: number, radius: number, rotate: boolean = true) {

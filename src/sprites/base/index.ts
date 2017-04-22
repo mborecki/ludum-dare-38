@@ -6,7 +6,7 @@ export default class Base extends Phaser.Sprite {
 
     constructor({game, x, y}) {
         super(game, x, y, 'base');
-        this.anchor.set(0.5, 0.5);
+        this.anchor.set(0.5, 0.9);
 
         this.createCannon();
     }
@@ -15,7 +15,7 @@ export default class Base extends Phaser.Sprite {
         this.cannon = new Cannon({
             game: this.game,
             x: 0,
-            y: 0
+            y: -10
         });
 
         this.addChild(this.cannon);
@@ -45,6 +45,6 @@ export default class Base extends Phaser.Sprite {
     }
 
     getBulletOrigin() : [number, number] {
-        return [this.x, this.y];
+        return [this.cannon.x + this.x, this.cannon.y + this.y];
     }
 }
