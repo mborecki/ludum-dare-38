@@ -4,13 +4,13 @@ export default {
         X: 400,
         Y: 400,
         GRAVITY: {
-            FORCE: 10,
+            FORCE: 400,
             LIMIT: 700
         }
     },
     WEAPONS: {
         CANNON_BALL: {
-            SPEED: 255,
+            SPEED: 20000,
             SIZE: 3
         }
     },

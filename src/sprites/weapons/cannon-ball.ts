@@ -2,20 +2,20 @@ import * as Phaser from 'phaser-ce';
 import CFG from '../../cfg';
 
 export default class CannonBall extends Phaser.Sprite {
-    constructor({game, x, y, angle}) {
-        super(game, x, y, 'cannon-ball');
+    constructor({state, x, y, angle}) {
+        super(state.game, x, y, 'cannon-ball');
         this.anchor.set(0.5, 0.5);
-        this.game.physics.enable(this);
+        this.game.physics.p2.enable(this);
         this.body.setCircle(CFG.WEAPONS.CANNON_BALL.SIZE);
 
-        this.body.velocity = {
-            x: -CFG.WEAPONS.CANNON_BALL.SPEED * Math.cos(angle),
-            y: -CFG.WEAPONS.CANNON_BALL.SPEED * Math.sin(angle)
-        }
+        this.body.setCollisionGroup(state.collisionObjects);
+        this.body.collides(state.collisionObjects);
 
-        this.events.onOutOfBounds.add(this.destroy, this);
-        this.body.onOverlap = new Phaser.Signal();
-        this.body.onOverlap.add(this.collision, this);
+        this.body.force.x = -CFG.WEAPONS.CANNON_BALL.SPEED * Math.cos(angle);
+        this.body.force.y = -CFG.WEAPONS.CANNON_BALL.SPEED * Math.sin(angle);
+
+
+        this.body.onBeginContact.add(this.collision, this);
     }
 
     update() {
@@ -30,12 +30,8 @@ export default class CannonBall extends Phaser.Sprite {
                                                  CFG.PLANET.X,
                                                  CFG.PLANET.Y);
 
-            this.body.velocity.x += force * Math.cos(angle);
-            this.body.velocity.y += force * Math.sin(angle);
-        }
-
-        if (distToPlanet > CFG.MAX_DISTANCE) {
-            this.destroy();
+            this.body.force.x += force * Math.cos(angle);
+            this.body.force.y += force * Math.sin(angle);
         }
     }
 
