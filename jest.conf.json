@@ -7,5 +7,12 @@
     "ts",
     "tsx",
     "js"
-  ]
+  ],
+  "moduleDirectories": [
+    "node_modules",
+    "lib"
+  ],
+  "moduleNameMapper": {
+    "phaser-ce": "<rootDir>/lib/phaser.min.js"
+  }
 }

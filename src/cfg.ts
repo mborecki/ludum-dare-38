@@ -14,5 +14,11 @@ export default {
             SIZE: 3
         }
     },
+    ENEMIES: {
+        GREEN_MAN: {
+            HEALTH: 10,
+            SPEED: 0.5
+        }
+    },
     MAX_DISTANCE: 1000
 }

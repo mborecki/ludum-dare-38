@@ -1,5 +1,5 @@
 import * as Phaser from 'phaser-ce';
-import {setResponsiveWidth, PntToWorld} from '../utils';
+import {setResponsiveWidth, PntToWorld, WorldToPnt, rotDist} from '../utils';
 import Planet from '../sprites/planet/index';
 import Base from '../sprites/base/index';
 import CFG from '../cfg';
@@ -11,6 +11,8 @@ export class GameState extends Phaser.State {
   planet: Planet;
   base: Base;
   bg: Phaser.Sprite;
+
+  playerBuildings: Phaser.Group;
 
   weapons: Phaser.Group;
   enemies: Phaser.Group;
@@ -32,16 +34,20 @@ export class GameState extends Phaser.State {
     this.world.camera.setPosition(0,0);
 
     this.createBG();
-    this.createPlanet();
-    this.createBase();
-    this.initInput();
 
+    this.playerBuildings = this.game.add.group();
+    this.createPlanet();
+
+    this.createBase();
 
     this.weapons = this.game.add.group();
     this.weapons.enableBody = true;
 
     this.enemies = this.game.add.group();
     this.enemies.enableBody = true;
+
+
+    this.initInput();
 
     this.spawnGreenMans();
   }
@@ -51,8 +57,6 @@ export class GameState extends Phaser.State {
   }
 
   update () {
-    // this.physics.p2.overlap(this.planet, this.weapons);
-    // this.physics.p2.overlap(this.enemies, this.weapons);
   }
 
   createBG() {
@@ -71,17 +75,14 @@ export class GameState extends Phaser.State {
   }
 
   createBase() {
-    let params = {
-      game: this.game
-    }
 
     this.base = new Base({
       game: this.game,
-      x: 0,
-      y: 0
+      pntRot: Math.random() * 4 - 2
+      // pntRot: 0
     });
 
-    this.spawnObject(this.base, 0 * Math.PI / 3, CFG.PLANET.SIZE)
+    this.playerBuildings.add(this.base);
   }
 
   spawnObject(object: Phaser.Sprite, rotation: number, radius: number = CFG.PLANET.SIZE, rotate: boolean = true) {
@@ -116,21 +117,36 @@ export class GameState extends Phaser.State {
   }
 
   spawnGreenMans() {
-    let c = 7;
+    let c = 8;
     for (let i = 1; i < c; i++) {
-
-      let {x, y, rot} = PntToWorld(Phaser.Math.PI2 * i / c);
-
-
-      console.log(x,y, rot)
-
       let enemy = this.enemies.add(new GreenMan({
         state: this,
-        x: x + CFG.PLANET.X,
-        y: y + CFG.PLANET.Y
+        pntRot: (Phaser.Math.PI2 * i / c) + (this.base.pntRot % Phaser.Math.PI2)
       }));
-
-      enemy.body.rotation = rot;
     }
+  }
+
+  findClosestPlayerRot(source) {
+    let best = null;
+    let bestDist = null;
+
+    this.playerBuildings.forEach(b => {
+      let rot = WorldToPnt(b.x, b.y).rot % Math.PI;
+      let dist = rotDist(source, rot);
+      if (!best) {
+        best = rot;
+        bestDist = dist;
+        return;
+      }
+
+      if (dist < bestDist) {
+        best = rot;
+        bestDist = dist;
+      }
+    }, this, true);
+
+    // console.log('dist', bestDist);
+
+    return best;
   }
 }
