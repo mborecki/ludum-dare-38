@@ -2,7 +2,6 @@
 import * as Phaser from 'phaser-ce'
 
 import {BootState} from './states/boot'
-import {SplashState} from './states/splash'
 import {GameState} from './states/game'
 
 class Game extends Phaser.Game {
@@ -14,7 +13,6 @@ class Game extends Phaser.Game {
     super(width, height, Phaser.AUTO, 'content', null)
 
     this.state.add('Boot', BootState, false)
-    this.state.add('Splash', SplashState, false)
     this.state.add('Game', GameState, false)
 
     this.state.start('Boot')
