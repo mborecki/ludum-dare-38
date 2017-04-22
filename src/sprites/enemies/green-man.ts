@@ -3,23 +3,26 @@ import CFG from '../../cfg';
 import {WorldToPnt, PntToWorld, rotDist} from '../../utils';
 
 export default class GreenMan extends Phaser.Sprite {
+    static POINTS: number = CFG.ENEMIES.GREEN_MAN.VALUE;
+    static COST: number = CFG.ENEMIES.GREEN_MAN.COST;
+
     private _pntRot: number;
     private moveVector: number = 1;
     killed: Phaser.Signal = new Phaser.Signal();
-    pointValue: number = CFG.ENEMIES.GREEN_MAN.VALUE;
     state: any;
 
     constructor({state, pntRot}) {
         super(state.game, 0, 0, 'green-man');
         this.state = state;
 
-        // console.log('GreenMan', pntRot);
 
         this.game.physics.p2.enable(this);
         this.anchor.set(0.5, 1);
 
         this.pntRot = pntRot;
         this.worldRender();
+
+        console.log('GreenMan', this.pntRot);
 
 
         this.body.setCollisionGroup(state.collisionObjects);
@@ -36,7 +39,6 @@ export default class GreenMan extends Phaser.Sprite {
     setMove() {
         let target = this.state.findClosestPlayerRot(this.pntRot);
 
-
         let a = Math.abs(target - this.pntRot)
         let b = Phaser.Math.PI2 - Math.abs(target - this.pntRot);
 
@@ -47,10 +49,6 @@ export default class GreenMan extends Phaser.Sprite {
         }
 
         if (target > this.pntRot) {
-            this.moveVector = this.moveVector * -1;
-        }
-
-        if (target > Math.PI) {
             this.moveVector = this.moveVector * -1;
         }
     }
@@ -78,7 +76,9 @@ export default class GreenMan extends Phaser.Sprite {
 
     collision() {
         console.log('AU!');
-        this.killed.dispatch();
+        this.killed.dispatch({
+            value: GreenMan.POINTS
+        });
         this.destroy();
     }
 

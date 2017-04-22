@@ -9,12 +9,13 @@ export default class Base extends Phaser.Sprite {
     constructor({game, pntRot}) {
         super(game, 0, 0, 'base');
 
-        console.log('Base', pntRot);
 
         this.anchor.set(0.5, 0.9);
 
         this.pntRot = pntRot;
         this.worldRender();
+
+        console.log('Base', this.pntRot);
 
         this.createCannon();
     }

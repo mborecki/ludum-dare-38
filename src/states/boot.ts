@@ -1,6 +1,6 @@
 import * as Phaser from 'phaser-ce';
 
-export class BootState extends Phaser.State {
+export default class BootState extends Phaser.State {
   stage: Phaser.Stage
 
   init () {

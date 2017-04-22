@@ -18,7 +18,8 @@ export default {
         GREEN_MAN: {
             HEALTH: 10,
             SPEED: 0.5,
-            VALUE: 10
+            VALUE: 10,
+            COST: 25
         }
     },
     MAX_DISTANCE: 1000

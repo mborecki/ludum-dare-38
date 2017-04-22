@@ -1,8 +1,8 @@
 /// <reference path="../lib/phaser.comments.d.ts"/>
 import * as Phaser from 'phaser-ce'
 
-import {BootState} from './states/boot'
-import {GameState} from './states/game'
+import BootState from './states/boot'
+import GameState from './states/game'
 
 class Game extends Phaser.Game {
 

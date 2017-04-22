@@ -4,10 +4,11 @@ import Planet from '../sprites/planet/index';
 import Base from '../sprites/base/index';
 import CFG from '../cfg';
 import GreenMan from '../sprites/enemies/green-man';
+import EnemyManager from '../enemy-manager';
 
 import CannonBall from '../sprites/weapons/cannon-ball';
 
-export class GameState extends Phaser.State {
+export default class GameState extends Phaser.State {
   planet: Planet;
   base: Base;
   bg: Phaser.Sprite;
@@ -21,6 +22,8 @@ export class GameState extends Phaser.State {
   collisionObjects: any;
 
   weaponMode: string = 'single';
+
+  enemyManager: EnemyManager = new EnemyManager(this);
 
   init () {
     this.game.physics.startSystem(Phaser.Physics.P2JS);
@@ -51,6 +54,8 @@ export class GameState extends Phaser.State {
     this.initInput();
 
     this.spawnGreenMans();
+
+    this.enemyManager.start();
   }
 
   render () {
@@ -59,6 +64,7 @@ export class GameState extends Phaser.State {
 
   update () {
     this.game.debug.text(`Points: ${this.points}`, 32, 32);
+    this.enemyManager.tick(this.game.time.physicsElapsed);
   }
 
   createBG() {
@@ -80,7 +86,8 @@ export class GameState extends Phaser.State {
 
     this.base = new Base({
       game: this.game,
-      pntRot: Math.random() * 4 - 2
+      // pntRot: Math.random() * 4 - 2
+      pntRot: -Math.PI * 0.5
       // pntRot: 0
     });
 
@@ -121,15 +128,22 @@ export class GameState extends Phaser.State {
   spawnGreenMans() {
     let c = 8;
     for (let i = 1; i < c; i++) {
-      let enemy = this.enemies.add(new GreenMan({
-        state: this,
-        pntRot: (Phaser.Math.PI2 * i / c) + (this.base.pntRot % Phaser.Math.PI2)
-      }));
-
-      enemy.killed.add(() => {
-        this.points += enemy.pointValue;
-      })
+      this.spawnGreenMan((Phaser.Math.PI2 * i / c) + (this.base.pntRot % Phaser.Math.PI2))
     }
+  }
+
+  spawnGreenMan(pntRot) {
+    console.log('spawnGreenMan', pntRot);
+    let enemy = this.enemies.add(new GreenMan({
+        state: this,
+        pntRot: pntRot
+    }));
+
+    enemy.killed.add(({
+      value
+    }) => {
+      this.points += value;
+    })
   }
 
   findClosestPlayerRot(source) {
@@ -137,7 +151,7 @@ export class GameState extends Phaser.State {
     let bestDist = null;
 
     this.playerBuildings.forEach(b => {
-      let rot = WorldToPnt(b.x, b.y).rot % Math.PI;
+      let rot = b.pntRot % Phaser.Math.PI2;
       let dist = rotDist(source, rot);
       if (!best) {
         best = rot;
